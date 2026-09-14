@@ -1,16 +1,12 @@
-// EXAMPLE 1 of changing values of variables
-
-#include <stdio.h>
-int main() 
+#include<stdio.h>
+int main()
 {
+    //variable declartion % initialization
+    int num1=10,num=15;
+    float num3=3.14;
+    double num4=10.13950292;
+    char ch='a';
+printf("int\nfloat\nchar\ndouble");
 
-    int myNum = 15;   // myNum is 15
 
-    printf("Integer value is: %d\n", myNum);
-
-    myNum = 20; // this will update the value of myNum to 20
-
-    printf("Updated Integer value is: %d\n", myNum);
-
-    return 0;
 }
