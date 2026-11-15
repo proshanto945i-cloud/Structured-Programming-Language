@@ -1,195 +1,224 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<string.h>
-#include "School.h"
 
+#include <stdio.h>
 
-    struct student{
-        char name[100];
-        int roll;
-        float GPA;
-    };
-    struct school_class{
-        int class;
-        int student_no;
-        struct student *students;
-    };
-    struct teacher{
-        char name[100];
-        int age;
-        char subject[100];
-    };
-    struct staff{
-        char name[100];
-        int age;
-        char position[100];
-    };
-    struct branch{
-        char location[100];
-    };
-    struct school{
-        char name[100];
-        int class_no;
-        int teacher_no;
-        int staff_no;
-        int branch_no;
-        struct school_class *classes;
-        struct teacher *teachers;
-        struct staff *staffs;
-        struct branch *branches;
-    };
-    void add_school(struct school **sch, int *s);
-    void display_schools(struct school *sch, int s);
-    void search_school(struct school *sch, int s);
-    void free_schools(struct school *sch, int s);
+struct SchoolInfo
+{
+    char schoolName[100];
+    char address[100];
+    char principal[100];
+    int establishedYear;
+};
 
-void school(){
-    struct school *sch = NULL;
-    int s=0;
-    int choice;
-    do{
-        printf("****** ");
-        printf("School");
-        printf(" ******\n");
-        printf("1. Add School\n");
-        printf("2. Display Schools\n");
-        printf("3. Search School\n");
-        printf("0. Exit\n");
-        printf("Enter your choice: \n");
-        scanf("%d",&choice);
-        if(choice==1){
-            add_school(&sch, &s);
-        }
-        else if(choice==2){
-            display_schools(sch,s);
-        }
-        else if(choice==3){
-            search_school(sch,s);
-        }
-        else if(choice==0){
-            free_schools(sch,s);
-            printf("Exiting....\n");
-        }
-        else{
-            printf("Invalid choice\n");
-        }
-    } while(choice!=0);
+struct StudentInfo
+{
+    int roll;
+    char name[100];
+    int className;
+    char section;
+    float marks;
+};
+
+struct SchoolInfo school;
+struct StudentInfo students[100];
+
+int totalStudents = 0;
+
+void schoolRegistration()
+{
+    printf("\n========== SCHOOL REGISTRATION ==========\n");
+
+    printf("School Name       : ");
+    scanf(" %[^\n]", school.schoolName);
+
+    printf("School Address    : ");
+    scanf(" %[^\n]", school.address);
+
+    printf("Principal Name    : ");
+    scanf(" %[^\n]", school.principal);
+
+    printf("Established Year  : ");
+    scanf("%d", &school.establishedYear);
+
+    printf("\n[SUCCESS] School information recorded!\n");
 }
 
-    void add_school(struct school **sch, int *s){
-    printf("Enter the number of schools: \n");
-    scanf("%d", s);
-    *sch=malloc(*s*sizeof(struct school));
-    for(int i=0; i<*s; i++){
-        printf("Enter the name of school %d: \n", i+1);
-        scanf(" %[^\n]", (*sch)[i].name);
-        printf("Enter the number of classes: \n");
-        scanf("%d", &(*sch)[i].class_no);  
-        (*sch)[i].classes= malloc((*sch)[i].class_no*sizeof(struct school_class));
-        printf("Enter the information of students: \n");
-        for(int j=0; j<(*sch)[i].class_no; j++){
-            printf("Enter class number: \n");
-            scanf("%d", &(*sch)[i].classes[j].class);
-            printf("Enter number of students in class %d: \n", j+1);
-            scanf(" %d", &(*sch)[i].classes[j].student_no);
-            (*sch)[i].classes[j].students = malloc((*sch)[i].classes[j].student_no*sizeof(struct student));
-            for(int k=0; k<(*sch)[i].classes[j].student_no; k++){
-            printf("Enter name: \n");
-            scanf(" %[^\n]", (*sch)[i].classes[j].students[k].name);
-            printf("Enter roll: \n");
-            scanf("%d", &(*sch)[i].classes[j].students[k].roll);
-            printf("Enter GPA: \n");
-            scanf("%f", &(*sch)[i].classes[j].students[k].GPA);
-            }
-        }
-        printf("Enter the number of teachers: \n");
-        scanf("%d", &(*sch)[i].teacher_no);
-        (*sch)[i].teachers = malloc((*sch)[i].teacher_no*sizeof(struct teacher));
-        printf("Enter the information of teachers: \n");
-        for(int j=0; j<(*sch)[i].teacher_no; j++){
-            printf("Enter name: \n");
-            scanf(" %[^\n]", (*sch)[i].teachers[j].name);
-            printf("Enter age: \n");
-            scanf("%d", &(*sch)[i].teachers[j].age);
-            printf("Enter subject: \n");
-            scanf(" %[^\n]", (*sch)[i].teachers[j].subject);
-
-        }
-        printf("Enter the number of staffs: \n");
-        scanf("%d", &(*sch)[i].staff_no);
-        (*sch)[i].staffs = malloc((*sch)[i].staff_no*sizeof(struct staff));
-        printf("Enter the information of staffs: \n");
-        for(int j=0; j<(*sch)[i].staff_no; j++){
-            printf("Enter name: \n");
-            scanf(" %[^\n]", (*sch)[i].staffs[j].name);
-            printf("Enter age: \n");
-            scanf("%d", &(*sch)[i].staffs[j].age);
-            printf("Enter the position of staff: \n");
-            scanf(" %[^\n]", (*sch)[i].staffs[j].position);
-        }
-        printf("Enter the number of branches: \n");
-        scanf("%d", &(*sch)[i].branch_no);
-        printf("Enter the information of branches: \n");
-        (*sch)[i].branches = malloc((*sch)[i].branch_no*sizeof(struct branch));
-        for(int j=0; j<(*sch)[i].branch_no; j++){
-            printf("Enter location: \n");
-            scanf(" %[^\n]", (*sch)[i].branches[j].location);
-        }
-
-    }
+void admitStudent()
+{
+    if(totalStudents >= 100)
+    {
+        printf("\nStudent record capacity is full!\n");
+        return;
     }
 
-    
-void display_schools(struct school *sch, int s){
-    printf("\n");
-    printf("****** ");
-    printf("School");
-    printf(" ******\n");
-    printf("\n");
-    if(s==0){
-        printf("No schools to display\n");
-    }
-    for(int i=0; i<s; i++){
-        printf("%d. %s\n",i+1,sch[i].name);
-    }
-    printf("\n");    
-}  
-    
+    printf("\n========== STUDENT ADMISSION ==========\n");
 
-void search_school(struct school *sch,int s){
-    printf("\n");
-    printf("****** ");
-    printf("School");
-    printf(" ******\n");
-    printf("\n");
-    char search_name[100];
-    printf("Enter the name of school: \n");
-    scanf(" %[^\n]", search_name);
-    if(s==0){
-        printf("There is no such school\n");
-    }
-    for(int i=0; i<s; i++){
-        if(strcmp(search_name,sch[i].name)==0){
-            printf("Name of school= %s\n",sch[i].name);
-            printf("Number of class= %d\n",sch[i].class_no);
-            printf("Number of teachers= %d\n",sch[i].teacher_no);
-            printf("Number of staffs= %d\n",sch[i].staff_no);
-            printf("Number of branches= %d\n",sch[i].branch_no);
-        }
-    }
-    printf("\n");
-    
+    printf("Enter Roll Number : ");
+    scanf("%d", &students[totalStudents].roll);
+
+    printf("Student Name      : ");
+    scanf(" %[^\n]", students[totalStudents].name);
+
+    printf("Class             : ");
+    scanf("%d", &students[totalStudents].className);
+
+    printf("Section           : ");
+    scanf(" %c", &students[totalStudents].section);
+
+    printf("Obtained Marks    : ");
+    scanf("%f", &students[totalStudents].marks);
+
+    totalStudents++;
+
+    printf("\n[ SUCCESS ] Student admission completed!\n");
 }
-    
-void free_schools(struct school *sch, int s){
-    for(int i = 0; i < s; i++) {
-        for(int j=0; j<sch[i].class_no; j++){
-            free(sch[i].classes[j].students);
-        }
-        free(sch[i].classes);
-        free(sch[i].teachers);
-        free(sch[i].staffs);
-        free(sch[i].branches);
+
+void schoolProfile()
+{
+    printf("\n");
+    printf("========================================\n");
+    printf("             SCHOOL PROFILE             \n");
+    printf("========================================\n");
+
+    printf("Institution Name : %s\n", school.schoolName);
+    printf("Location         : %s\n", school.address);
+    printf("Head Teacher     : %s\n", school.principal);
+    printf("Founded In       : %d\n", school.establishedYear);
+
+    printf("----------------------------------------\n");
+    printf("Total Admissions: %d\n", totalStudents);
+    printf("========================================\n");
+}
+
+void studentDirectory()
+{
+    int i;
+
+    if(totalStudents == 0)
+    {
+        printf("\nNo student records available!\n");
+        return;
     }
-    free(sch);
+
+    printf("\n========== STUDENT DIRECTORY ==========\n");
+
+    for(i = 0; i < totalStudents; i++)
+    {
+        printf("\nStudent Record #%d\n", i + 1);
+        printf("----------------------------------------\n");
+
+        printf("Roll Number : %d\n", students[i].roll);
+        printf("Name        : %s\n", students[i].name);
+        printf("Class       : %d\n", students[i].className);
+        printf("Section     : %c\n", students[i].section);
+        printf("Marks       : %.2f\n", students[i].marks);
+    }
+
+    printf("\n========================================\n");
+}
+
+void studentResult()
+{
+    int roll, i, found = 0;
+
+    printf("\n========== RESULT SEARCH ==========\n");
+    printf("Enter Student Roll: ");
+    scanf("%d", &roll);
+
+    for(i = 0; i < totalStudents; i++)
+    {
+        if(students[i].roll == roll)
+        {
+            found = 1;
+
+            printf("\n========== ACADEMIC RESULT ==========\n");
+
+            printf("Student Name : %s\n", students[i].name);
+            printf("Roll Number  : %d\n", students[i].roll);
+            printf("Class        : %d\n", students[i].className);
+            printf("Marks        : %.2f / 100\n", students[i].marks);
+
+            if(students[i].marks >= 80)
+                printf("Grade        : A+\n");
+            else if(students[i].marks >= 70)
+                printf("Grade        : A\n");
+            else if(students[i].marks >= 60)
+                printf("Grade        : A-\n");
+            else if(students[i].marks >= 50)
+                printf("Grade        : B\n");
+            else if(students[i].marks >= 40)
+                printf("Grade        : C\n");
+            else if(students[i].marks >= 33)
+                printf("Grade        : D\n");
+            else
+                printf("Grade        : F (Fail)\n");
+
+            printf("====================================\n");
+            break;
+        }
+    }
+
+    if(found == 0)
+    {
+        printf("\nNo student found with this roll number!\n");
+    }
+}
+
+int main()
+{
+    int option;
+
+    printf("\n");
+    printf("****************************************\n");
+    printf("*                                      *\n");
+    printf("*        SCHOOL MANAGEMENT SYSTEM      *\n");
+    printf("*                                      *\n");
+    printf("****************************************\n");
+
+    do
+    {
+        printf("\n------------- MAIN DASHBOARD -------------\n");
+        printf(" 1. Register School Information\n");
+        printf(" 2. Admit New Student\n");
+        printf(" 3. View School Profile\n");
+        printf(" 4. View Student Directory\n");
+        printf(" 5. Search Student Result\n");
+        printf(" 0. Exit System\n");
+        printf("-------------------------------------------\n");
+
+        printf("Choose an option: ");
+        scanf("%d", &option);
+
+        switch(option)
+        {
+            case 1:
+                schoolRegistration();
+                break;
+
+            case 2:
+                admitStudent();
+                break;
+
+            case 3:
+                schoolProfile();
+                break;
+
+            case 4:
+                studentDirectory();
+                break;
+
+            case 5:
+                studentResult();
+                break;
+
+            case 0:
+                printf("\nSchool Management System Closed.\n");
+                break;
+
+            default:
+                printf("\nInvalid option! Please select again.\n");
+        }
+
+    } while(option != 0);
+
+    return 0;
 }
