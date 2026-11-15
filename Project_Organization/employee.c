@@ -1,56 +1,166 @@
-#include<stdio.h>
-#include<string.h>
-struct Employee {
+
+#include <stdio.h>
+
+struct Company
+{
     char name[50];
-    char Location[50];
-    float salary;
-    int age;
-    char blood_group[10];
+    char location[100];
+    char director[100];
+    int totalStaff;
 };
-int main(){
-    int num_employees;
-    printf("Welcome to RealTech Organisation!\n");
-    printf("How many employees' data do you want to input?");
-    scanf("%d",&num_employees);
-    while(getchar() !='\n');
-    struct Employee emplist[num_employees];
-    for(int i=0;i<num_employees;i++){
-        printf("Enter Details for Employee %d\n",i+1);
-        printf("Enter Employee Name: ");
-        fgets(emplist[i].name,sizeof(emplist[i].name), stdin);
-        emplist[i].name[strcspn(emplist[i].name, "\n")] = '\0';
-        printf("Enter Home Location: ");
-        fgets(emplist[i].Location,sizeof(emplist[i].Location), stdin);
-        emplist[i].Location[strcspn(emplist[i].Location, "\n")] = '\0';
-        printf("Enter Salary: ");
-        scanf("%.2f",&emplist[i].salary);
-        while(getchar() != '\n');
-        printf("Enter Age: ");
-        scanf("%d",&emplist[i].age);
-        while(getchar() != '\n');
-        printf("Enter Blood Group: ");
-        fgets(emplist[i].blood_group,sizeof(emplist[i].blood_group), stdin);
-        emplist[i].blood_group[strcspn(emplist[i].blood_group, "\n")] = '\0';
+
+struct Worker
+{
+    int code;
+    char fullName[100];
+    char department[50];
+    float salary;
+};
+
+struct Company myCompany;
+struct Worker staff[100];
+int staffTotal = 0;
+
+void createProfile()
+{
+    printf("\n--- CREATE COMPANY PROFILE ---\n");
+
+    printf("Company name       : ");
+    scanf(" %[^\n]", myCompany.name);
+
+    printf("Company location   : ");
+    scanf(" %[^\n]", myCompany.location);
+
+    printf("Director name      : ");
+    scanf(" %[^\n]", myCompany.director);
+
+    printf("Total employees    : ");
+    scanf("%d", &myCompany.totalStaff);
+
+    printf("\n[ SUCCESS ] Company profile created.\n");
+}
+
+void addNewStaff()
+{
+    if(staffTotal >= 100)
+    {
+        printf("\n[ ERROR ] Employee database is full.\n");
+        return;
     }
-int searchID;
-int found =0;
-printf("\n\n");
-printf("Enter Employee Id: ");
-scanf("%d",&searchID);
-for(int i=0;i<num_employees;i++){
-if( (i+101)== searchID ){
-printf("Employee Found!\n");
-printf("Name: %s\n",emplist[i].name);
-printf("Location: %s\n",emplist[i].Location);
-printf("Salary: %.2f\n",emplist[i].salary);
-printf("Age: %d\n",emplist[i].age);
-printf("Blood Group: %s\n",emplist[i].blood_group);
-found=1;
-break;
+
+    printf("\n--- EMPLOYEE REGISTRATION FORM ---\n");
+
+    printf("Staff code         : ");
+    scanf("%d", &staff[staffTotal].code);
+
+    printf("Full name          : ");
+    scanf(" %[^\n]", staff[staffTotal].fullName);
+
+    printf("Working department : ");
+    scanf(" %[^\n]", staff[staffTotal].department);
+
+    printf("Monthly salary     : ");
+    scanf("%f", &staff[staffTotal].salary);
+
+    staffTotal++;
+
+    printf("\n[ SUCCESS ] New staff member registered.\n");
 }
+
+void companyReport()
+{
+    printf("\n");
+    printf("========================================\n");
+    printf("          COMPANY INFORMATION          \n");
+    printf("========================================\n");
+
+    printf("Business Name      : %s\n", myCompany.name);
+    printf("Office Location    : %s\n", myCompany.location);
+    printf("Company Director   : %s\n", myCompany.director);
+    printf("----------------------------------------\n");
+    printf("Declared Staff     : %d\n", myCompany.totalStaff);
+    printf("Registered Staff   : %d\n", staffTotal);
+    printf("========================================\n");
 }
-if(!found){
-printf("Employee with ID %d not found\n",searchID);
+
+void employeeReport()
+{
+    int i;
+
+    if(staffTotal == 0)
+    {
+        printf("\n[ NOTICE ] Employee database is empty.\n");
+        return;
+    }
+
+    printf("\n");
+    printf("************ STAFF DIRECTORY ************\n");
+
+    for(i = 0; i < staffTotal; i++)
+    {
+        printf("\nEMPLOYEE RECORD #%d\n", i + 1);
+        printf("-----------------------------------------\n");
+
+        printf("Employee Code : %d\n", staff[i].code);
+        printf("Employee Name : %s\n", staff[i].fullName);
+        printf("Department    : %s\n", staff[i].department);
+        printf("Salary        : %.2f BDT\n", staff[i].salary);
+    }
+
+    printf("\n******** END OF STAFF DIRECTORY *********\n");
 }
-return 0;
+
+int main()
+{
+    int choice;
+
+    printf("\n");
+    printf("#########################################\n");
+    printf("#                                       #\n");
+    printf("#       CORPORATE RECORD SYSTEM         #\n");
+    printf("#                                       #\n");
+    printf("#########################################\n");
+
+    do
+    {
+        printf("\n============== CONTROL PANEL ==============\n");
+        printf("|  [1]  Create Company Profile             |\n");
+        printf("|  [2]  Register Employee                  |\n");
+        printf("|  [3]  Generate Company Report            |\n");
+        printf("|  [4]  Open Staff Directory               |\n");
+        printf("|  [0]  Close Application                  |\n");
+        printf("============================================\n");
+
+        printf("Enter command number: ");
+        scanf("%d", &choice);
+
+        switch(choice)
+        {
+            case 1:
+                createProfile();
+                break;
+
+            case 2:
+                addNewStaff();
+                break;
+
+            case 3:
+                companyReport();
+                break;
+
+            case 4:
+                employeeReport();
+                break;
+
+            case 0:
+                printf("\nApplication closed. Thank you!\n");
+                break;
+
+            default:
+                printf("\n[ WARNING ] Invalid command. Try again.\n");
+        }
+
+    } while(choice != 0);
+
+    return 0;
 }
